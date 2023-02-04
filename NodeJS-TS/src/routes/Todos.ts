@@ -4,13 +4,15 @@ import { Todos } from "../models/Todos";
 const router = Router();
 
 const todos: Array<Todos> = [];
+type Body = { id: string; text: string };
 
 router.get("/", (req, res) => {
   res.status(200).json(todos);
 });
 
 router.post("/", (req, res) => {
-  const textVal: string = req.body.text;
+  const body = req.body as Body; // Type casting
+  const textVal = body.text;
   console.log(textVal);
   todos.push({
     id: todos.length,
@@ -20,9 +22,9 @@ router.post("/", (req, res) => {
 });
 
 router.patch("/", (req, res) => {
-  const data = req.body;
-  const id: number = parseInt(data.id);
-  const text = data.text;
+  const body: Body = req.body as Body; // Type casting
+  const id: number = parseInt(body.id);
+  const text = body.text;
   for (let i = 0; i < todos.length; i++) {
     if (todos[i].id === id) {
       todos[i].text = text;
@@ -33,7 +35,8 @@ router.patch("/", (req, res) => {
 });
 
 router.delete("/", (req, res) => {
-  const id: number = parseInt(req.body.id);
+  const body = req.body as Body; // Type casting
+  const id: number = parseInt(body.id);
   todos.splice(id, 1);
   res.status(200).json(todos);
 });
